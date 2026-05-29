@@ -1,0 +1,11 @@
+TITLE: ָהוט הכÿ נאסרטנוםטי WhatsApp
+
+TEXTAREAS
+==================================================
+0 <Locator frame=<Frame name= url='https://chatgpt.com/c/6a19c79e-5848-83eb-b86a-e64b9f680791'> selector='textarea >> nth=0'>
+
+INPUTS
+==================================================
+0 None
+1 None
+2 None

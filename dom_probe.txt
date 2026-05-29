@@ -1,0 +1,16 @@
+
+SELECTOR: [contenteditable='true']
+COUNT: 1
+VISIBLE: True
+
+SELECTOR: .ProseMirror
+COUNT: 1
+VISIBLE: True
+
+SELECTOR: [role='textbox']
+COUNT: 1
+VISIBLE: True
+
+SELECTOR: textarea
+COUNT: 1
+VISIBLE: False

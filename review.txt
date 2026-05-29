@@ -5,25 +5,26 @@ Your branch is up to date with 'origin/main'.
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
+	modified:   assistant/main.py
+	modified:   git_push.cmd
+	modified:   review.cmd
 	modified:   review.txt
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	git_push.cmd
-	review.cmd
-	run.cmd
-	setup_tools.cmd
+	modified:   run.cmd
 
 no changes added to commit (use "git add" and/or "git commit -a")
+
 ===== GIT LOG =====
+9a8424a auto update
 d044439 feat: implement Jabber sender module
 eca3660 feat: bootstrap assistant modules
 435d2ac docs: update README
 6e26a18 refactor: reorganize project structure
 e9febe9 feat: initial CDP and Jabber integration
+
 ===== REMOTES =====
 origin	https://github.com/drAjbolit/_jabber-assistant.git (fetch)
 origin	https://github.com/drAjbolit/_jabber-assistant.git (push)
+
 ===== PROJECT FILES =====
 .gitignore
 README.md
@@ -39,10 +40,15 @@ experiments/inspect_inputs.py
 experiments/inspect_jabber.py
 experiments/jabber_send.py
 experiments/test_cdp.py
+git_push.cmd
 project_dump.txt
+review.cmd
 review.txt
+run.cmd
+setup_tools.cmd
 tests/jabber_receive.py
 tests/jabber_send.py
+
 ===== assistant\main.py =====
 from assistant.cdp import ChromeCDP
 from assistant.jabber import Jabber
@@ -54,18 +60,15 @@ def main():
 
     jabber_page = cdp.find_page("chat.jabber.ru")
 
-    if not jabber_page:
-        print("JABBER: False")
-        return
+    print("JABBER:", bool(jabber_page))
 
-    print("JABBER: True")
-
-    jabber = Jabber(jabber_page)
-    jabber.send_message("Hello from assistant module")
+    if jabber_page:
+        Jabber(jabber_page).send_message("Hello from assistant module")
 
 
 if __name__ == "__main__":
     main()
+
 ===== assistant\cdp.py =====
 from playwright.sync_api import sync_playwright
 
@@ -86,7 +89,8 @@ class ChromeCDP:
             for page in context.pages:
                 if url_part in page.url:
                     return page
-        return None===== assistant\jabber.py =====
+        return None
+===== assistant\jabber.py =====
 class Jabber:
 
     def __init__(self, page):
@@ -96,10 +100,12 @@ class Jabber:
         textarea = self.page.locator("textarea").first
         textarea.fill(text)
         textarea.press("Enter")
+
 ===== assistant\chatgpt.py =====
 class ChatGPT:
     def ask(self, text):
-        pass===== assistant\bridge.py =====
+        pass
+===== assistant\bridge.py =====
 jabber message
       ↓
 chatgpt.ask()

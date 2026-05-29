@@ -8,14 +8,10 @@ def main():
 
     jabber_page = cdp.find_page("chat.jabber.ru")
 
-    if not jabber_page:
-        print("JABBER: False")
-        return
+    print("JABBER:", bool(jabber_page))
 
-    print("JABBER: True")
-
-    jabber = Jabber(jabber_page)
-    jabber.send_message("Hello from assistant module")
+    if jabber_page:
+        Jabber(jabber_page).send_message("Hello from assistant module")
 
 
 if __name__ == "__main__":
