@@ -1,0 +1,27 @@
+﻿===== RUN ===== 
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "g:\_jabber-assistant\assistant\main.py", line 1, in <module>
+    from assistant.cdp import ChromeCDP
+  File "g:\_jabber-assistant\assistant\cdp.py", line 2
+    pass        self.playwright = sync_playwright().start()
+                ^^^^
+SyntaxError: invalid syntax
+ 
+===== GIT STATUS ===== 
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   assistant/cdp.py
+	modified:   assistant/main.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	project_dump.txt
+	review.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
