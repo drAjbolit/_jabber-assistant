@@ -12,13 +12,18 @@ def wait_answer(
     old_ids
 ):
 
-    wait_response_finished(
-        page,
-        old_ids
+    msg_id = (
+        wait_response_finished(
+            page,
+            old_ids
+        )
     )
 
-    answer = get_last_answer(
-        page
+    answer = (
+        get_last_answer(
+            page,
+            msg_id
+        )
     )
 
     print(

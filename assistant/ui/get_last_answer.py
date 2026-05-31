@@ -1,32 +1,41 @@
-def get_last_answer(page):
+def get_last_answer(
+    page,
+    msg_id
+):
 
-    assistants = page.locator(
-        '[data-message-author-role="assistant"]'
-    )
+    try:
 
-    count = assistants.count()
+        msg = page.locator(
+            f'[data-message-id="{msg_id}"]'
+        )
 
-    for i in range(
-        count - 1,
-        -1,
-        -1
-    ):
-
-        try:
-
-            text = (
-                assistants
-                .nth(i)
-                .inner_text(
-                    timeout=1000
-                )
-                .strip()
+        text = (
+            msg
+            .inner_text(
+                timeout=5000
             )
+            .strip()
+        )
 
-            if text:
-                return text
+        print(
+            "ANSWER LEN:",
+            len(text)
+        )
 
-        except Exception:
-            pass
+        print(
+            "ANSWER END:",
+            repr(
+                text[-300:]
+            )
+        )
 
-    return ""
+        return text
+
+    except Exception as e:
+
+        print(
+            "GET ANSWER ERROR:",
+            e
+        )
+
+        return ""
