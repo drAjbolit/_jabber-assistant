@@ -80,7 +80,7 @@
 
         if (
             ws &&
-            ws.readyState === 1
+            ws.readyState === WebSocket.OPEN
         ) {
 
             ws.send(
@@ -93,40 +93,91 @@
 
     }, 1000);
 
-    const seen = new Set();
+    const seenMessages =
+        new Set();
 
-    function sendMessage(text) {
+    function processMessageNode(
+        textNode
+    ) {
+
+        const msg =
+            textNode.closest(
+                ".chat-msg"
+            );
+
+        if (!msg) {
+            return;
+        }
+
+        const from =
+            msg.dataset.from || "";
+
+        /*
+         * Игнорируем собственные
+         * сообщения бота.
+         */
+
+        if (
+            from ===
+            "vova_gpt@jabber.ru"
+        ) {
+
+            return;
+        }
+
+        const msgId =
+            msg.dataset.msgid;
+
+        if (!msgId) {
+            return;
+        }
+
+        if (
+            seenMessages.has(
+                msgId
+            )
+        ) {
+            return;
+        }
+
+        seenMessages.add(
+            msgId
+        );
+
+        const text =
+            (
+                textNode.innerText ||
+                ""
+            ).trim();
 
         if (!text) {
             return;
         }
-
-        text = text.trim();
-
-        if (!text) {
-            return;
-        }
-
-        if (seen.has(text)) {
-            return;
-        }
-
-        seen.add(text);
 
         console.log(
             "NEW JABBER MESSAGE:",
+            msgId
+        );
+
+        console.log(
             text
         );
 
         if (
             ws &&
-            ws.readyState === 1
+            ws.readyState === WebSocket.OPEN
         ) {
 
             ws.send(
                 JSON.stringify({
-                    type: "jabber_message",
-                    text: text
+                    type:
+                        "jabber_message",
+                    msgid:
+                        msgId,
+                    from:
+                        from,
+                    text:
+                        text
                 })
             );
 
@@ -136,38 +187,119 @@
         }
     }
 
-    function scanMessages() {
+    function processExistingHistory() {
 
         document
             .querySelectorAll(
-                ".chat-msg__text"
+                ".chat-msg"
             )
-            .forEach(el => {
+            .forEach(msg => {
 
-                sendMessage(
-                    el.innerText
-                );
+                const msgId =
+                    msg.dataset.msgid;
+
+                if (msgId) {
+
+                    seenMessages.add(
+                        msgId
+                    );
+                }
             });
+
+        console.log(
+            "INITIAL HISTORY SKIPPED:",
+            seenMessages.size
+        );
     }
 
-    scanMessages();
+    function startObserver() {
 
-    const observer =
-        new MutationObserver(() => {
+        const observer =
+            new MutationObserver(
+                mutations => {
 
-            scanMessages();
-        });
+                    mutations.forEach(
+                        mutation => {
 
-    observer.observe(
-        document.body,
-        {
-            childList: true,
-            subtree: true
+                            mutation
+                                .addedNodes
+                                .forEach(
+                                    node => {
+
+                                        if (
+                                            !node.querySelectorAll
+                                        ) {
+                                            return;
+                                        }
+
+                                        if (
+                                            node.matches &&
+                                            node.matches(
+                                                ".chat-msg__text"
+                                            )
+                                        ) {
+
+                                            processMessageNode(
+                                                node
+                                            );
+                                        }
+
+                                        node
+                                            .querySelectorAll(
+                                                ".chat-msg__text"
+                                            )
+                                            .forEach(
+                                                processMessageNode
+                                            );
+                                    }
+                                );
+                        }
+                    );
+                }
+            );
+
+        observer.observe(
+            document.body,
+            {
+                childList: true,
+                subtree: true
+            }
+        );
+
+        console.log(
+            "DOM OBSERVER INSTALLED"
+        );
+    }
+
+    function waitForChatReady() {
+
+        const msgs =
+            document.querySelectorAll(
+                ".chat-msg"
+            );
+
+        console.log(
+            "CHAT CHECK:",
+            msgs.length
+        );
+
+        if (
+            msgs.length < 10
+        ) {
+
+            setTimeout(
+                waitForChatReady,
+                1000
+            );
+
+            return;
         }
-    );
 
-    console.log(
-        "DOM OBSERVER INSTALLED"
-    );
+        processExistingHistory();
+
+        startObserver();
+    }
+
+    waitForChatReady();
 
 })();

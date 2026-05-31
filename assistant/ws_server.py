@@ -16,24 +16,54 @@ class WSServer:
         websocket
     ):
 
-        async for message in websocket:
+        print(
+            "[WS CLIENT CONNECTED]"
+        )
 
-            try:
+        try:
 
-                data = json.loads(
-                    message
-                )
+            async for message in websocket:
 
-                self.queue.append(
-                    data
-                )
+                try:
 
-            except Exception as e:
+                    data = json.loads(
+                        message
+                    )
 
-                print(
-                    "WS PARSE ERROR:",
-                    e
-                )
+                    if (
+                        data.get("type")
+                        == "heartbeat"
+                    ):
+                        continue
+
+                    print(
+                        "[WS]",
+                        data
+                    )
+
+                    self.queue.append(
+                        data
+                    )
+
+                except Exception as e:
+
+                    print(
+                        "WS PARSE ERROR:",
+                        e
+                    )
+
+        except Exception as e:
+
+            print(
+                "[WS CONNECTION ERROR]",
+                repr(e)
+            )
+
+        finally:
+
+            print(
+                "[WS CLIENT DISCONNECTED]"
+            )
 
     async def run_server(
         self
