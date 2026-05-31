@@ -1,0 +1,26 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Jabber Assistant Bridge",
+  "version": "1.0",
+
+  "permissions": [
+    "scripting"
+  ],
+
+  "host_permissions": [
+    "https://chat.jabber.ru/*",
+    "https://chatgpt.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.jabber.ru/*"
+      ],
+      "js": [
+        "jabber_hook.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
