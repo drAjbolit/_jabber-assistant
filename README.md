@@ -1,26 +1,11 @@
-﻿# _jabber-assistant
+# Jabber AI Assistant
 
-Personal AI assistant for Jabber/XMPP.
+Персональный AI-ассистент, который подключается к существующему браузеру с открытыми вкладками Jabber и ChatGPT, перехватывает входящие XMPP-сообщения и отвечает на них через ChatGPT.
 
-## Features
+## 🚀 Быстрый старт
 
-- Connect to existing Chrome session via CDP
-- Listen for incoming Jabber messages via Strophe.js hooks
-- Send messages through Jabber Web
-- Bridge conversations with ChatGPT
+### 1. Запустите Chrome с отладкой
 
-## Status
-
-🚧 Early prototype
-
-## Current status
-
-- Chrome CDP connection works
-- Jabber tab detection works
-- ChatGPT tab detection works
-- Incoming XMPP messages intercepted via Strophe.js
-- Outgoing messages sent through textarea automation
-
-## Architecture
-
-XMPP -> Strophe Hook -> Python -> ChatGPT -> Jabber
+**Windows:**
+```cmd
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
